@@ -1,4 +1,4 @@
-# Miles "Tails" Prower Telegram Bot
+# Miles "Tails" Prower Telegram Bot But Learning For Languages
 
 A Telegram chatbot based on Miles "Tails" Prower from the Sonic the Hedgehog universe, powered by Google's Gemini 2.0-flash-lite AI model.
 
