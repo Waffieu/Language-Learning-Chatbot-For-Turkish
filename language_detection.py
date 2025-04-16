@@ -84,14 +84,14 @@ def detect_language_with_gemini(text: str, is_search_query: bool = False) -> str
             Respond with ONLY the language name, nothing else.
             """
 
-        # Generate language detection
+        # Generate language detection using the specific language detection model
         model = genai.GenerativeModel(
-            model_name=config.GEMINI_MODEL,
+            model_name=config.LANGUAGE_DETECTION_MODEL,
             generation_config={
-                "temperature": 0.1,
-                "top_p": 0.95,
-                "top_k": 40,
-                "max_output_tokens": 10,
+                "temperature": config.LANGUAGE_DETECTION_TEMPERATURE,
+                "top_p": config.LANGUAGE_DETECTION_TOP_P,
+                "top_k": config.LANGUAGE_DETECTION_TOP_K,
+                "max_output_tokens": config.LANGUAGE_DETECTION_MAX_OUTPUT_TOKENS,
             }
         )
 

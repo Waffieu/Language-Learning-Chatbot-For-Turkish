@@ -1,11 +1,18 @@
-# Miles "Tails" Prower Telegram Bot But Learning For Languages
+# Miles "Tails" Prower Telegram Bot
 
-A Telegram chatbot based on Miles "Tails" Prower from the Sonic the Hedgehog universe, powered by Google's Gemini 2.0-flash-lite AI model.
+A Telegram chatbot based on Miles "Tails" Prower from the Sonic the Hedgehog universe, powered by Google's Gemini AI models with a hybrid system using both `gemini-2.0-flash-thinking-exp-01-21` and `gemini-2.0-flash-lite`.
 
 ## Features
 
 - **Tails Personality**: The bot embodies Miles "Tails" Prower, the twin-tailed fox genius inventor and Sonic's best friend from the Sonic the Hedgehog universe
 - **Typing Indicator**: Shows typing animation while generating responses
+- **Hybrid Model System**:
+  - Uses specialized Gemini model configurations for different tasks
+  - Main conversation: `gemini-2.0-flash-thinking-exp-01-21` with balanced temperature (0.7)
+  - Word translation: `gemini-2.0-flash-lite` with low temperature (0.1) for accuracy
+  - Search query generation: `gemini-2.0-flash-lite` with moderate temperature (0.2)
+  - Language detection: `gemini-2.0-flash-lite` with low temperature (0.1) for precision
+  - Each model is optimized for its specific task to improve overall performance
 - **Web Search Capabilities**:
   - **Automatic Web Search**: Automatically searches the web for every query to provide accurate information
   - **Deep Search Command**: Use `/deepsearch` to search up to 1000 websites with diverse queries for comprehensive answers
@@ -22,9 +29,11 @@ A Telegram chatbot based on Miles "Tails" Prower from the Sonic the Hedgehog uni
   - Naturally references time information in conversations
 - **Language Adaptation**:
   - Automatically detects and responds in the user's language
-  - Translates action indicators (like "*tilts head curiously*") to match the detected language
-  - Ensures physical expressions are always in the same language as the conversation
-- **Natural Responses**: Provides conversational, A1-level language responses
+  - Provides A1-level language responses for non-native speakers
+  - Translates uncommon words to Turkish for language learners
+  - Groups all word translations at the end of messages in a "wort schatz" section
+  - Adds friendly emojis to make responses more engaging
+- **Natural Responses**: Provides conversational, easy-to-understand responses
 
 ## Setup
 
@@ -102,15 +111,84 @@ Simply send messages to the bot and it will:
   - The bot generates search queries in your language to ensure relevant, localized results
   - Responses are provided in the same language as your search query
 
+### Word Translation Feature
+
+When chatting in languages other than Turkish, the bot automatically translates uncommon words to Turkish to help language learners. All translations are grouped at the end of the message in a "wort schatz" section.
+
+Example:
+
+```
+Heldmaschine ist eine deutsche Band!
+
+Sie machen Musik, die NDH heißt.
+
+Ich habe im Internet nachgeschaut.
+
+*   Sie wurde 2008 gegründet. 👍
+*   Sie kommt aus Koblenz. Magst du ihre Musik? 🦊🔧
+
+wort schatz
+heldmaschine = kahraman makinesi
+heißt = denir
+internet = internet
+gegründet = kuruldu 😊
+```
+
+This feature helps Turkish speakers learn new vocabulary in other languages while maintaining a clean, readable message format.
+
 ## Customization
 
 - Adjust Tails' personality in `personality.py`
 - Modify memory settings in `.env`
-- Configure Gemini model parameters in `config.py`
+- Configure the hybrid model system in `config.py`:
+  ```python
+  # Main conversation model
+  GEMINI_MODEL = "gemini-2.0-flash-thinking-exp-01-21"
+  GEMINI_TEMPERATURE = 0.7
+  GEMINI_TOP_P = 0.95
+  GEMINI_TOP_K = 40
+  GEMINI_MAX_OUTPUT_TOKENS = 2048
+
+  # Word translation model
+  WORD_TRANSLATION_MODEL = "gemini-2.0-flash-lite"
+  WORD_TRANSLATION_TEMPERATURE = 0.1
+  WORD_TRANSLATION_TOP_P = 0.95
+  WORD_TRANSLATION_TOP_K = 40
+  WORD_TRANSLATION_MAX_OUTPUT_TOKENS = 200
+
+  # Search query generation model
+  SEARCH_QUERY_MODEL = "gemini-2.0-flash-lite"
+  SEARCH_QUERY_TEMPERATURE = 0.2
+  SEARCH_QUERY_TOP_P = 0.95
+  SEARCH_QUERY_TOP_K = 40
+  SEARCH_QUERY_MAX_OUTPUT_TOKENS = 256
+
+  # Language detection model
+  LANGUAGE_DETECTION_MODEL = "gemini-2.0-flash-lite"
+  LANGUAGE_DETECTION_TEMPERATURE = 0.1
+  LANGUAGE_DETECTION_TOP_P = 0.95
+  LANGUAGE_DETECTION_TOP_K = 40
+  LANGUAGE_DETECTION_MAX_OUTPUT_TOKENS = 10
+  ```
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Recent Updates
+
+### April 2025
+- **Hybrid Model System Implementation**: Specialized Gemini model configurations for different tasks:
+  - Main conversation model (`gemini-2.0-flash-thinking-exp-01-21`): Optimized for natural, engaging responses
+  - Word translation model (`gemini-2.0-flash-lite`): Configured for high accuracy translations
+  - Search query generation model (`gemini-2.0-flash-lite`): Tuned for relevant search queries
+  - Language detection model (`gemini-2.0-flash-lite`): Optimized for precise language identification
+- **Improved Word Translation Format**: All word translations ("wort schatz") are now grouped together at the end of messages instead of appearing after each sentence
+- **Enhanced Translation Detection**: Better identification of uncommon words that need translation for language learners
+- **Optimized Memory System**: Improved performance with GPU acceleration for faster responses
+- **Removed Action Descriptions**: Physical action descriptions have been removed for more natural conversation
+- **Time Awareness Improvements**: Time information is now only shown when specifically requested
+- **Deep Search Enhancements**: Better progress updates and language-specific results
 
 ## Acknowledgments
 
