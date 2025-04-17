@@ -40,7 +40,7 @@ def identify_uncommon_words(text: str, language: str) -> List[str]:
     unique_words = []
     seen = set()
     for word in words:
-        if word not in seen and len(word) > 3:  # Only consider words longer than 3 characters
+        if word not in seen and len(word) > 2:  # Consider words longer than 2 characters (more aggressive)
             seen.add(word)
             unique_words.append(word)
 
@@ -164,26 +164,28 @@ def identify_uncommon_words(text: str, language: str) -> List[str]:
     # Use Gemini to identify uncommon words
     try:
         prompt = f"""
-        Analyze the following list of words in {language} and identify ONLY the truly uncommon or difficult words for someone with A1 (beginner) language level.
+        Analyze the following list of words in {language} and identify words that might be challenging for someone with A1 (beginner) language level.
 
         Words: {', '.join(unique_words)}
 
-        Respond with ONLY the genuinely uncommon words separated by commas, nothing else. If there are no uncommon words, respond with "NONE".
+        Respond with ONLY the potentially challenging words separated by commas, nothing else. If there are no challenging words, respond with "NONE".
 
-        Be VERY selective - only include words that would be completely unfamiliar to beginners.
-        Focus ONLY on words that are:
-        1. Advanced vocabulary (B1 level or higher)
+        Be INCLUSIVE in your selection - include any words that might be unfamiliar to beginners.
+        Include words that are:
+        1. Not in the most basic A1 vocabulary (even if they're A2 level)
         2. Technical or specialized terms
-        3. Abstract concepts difficult to explain simply
-        4. Words with complex meanings that aren't part of everyday basic communication
+        3. Abstract concepts
+        4. Words with nuanced meanings
+        5. Words that aren't immediately obvious from context
+        6. Words that might be confusing for beginners
+        7. Words that are longer or have unusual spelling
+        8. Words that are less frequently used in everyday conversation
 
-        DO NOT include words that:
-        1. Are part of basic A1 vocabulary
-        2. Are common everyday words
-        3. Have simple meanings that can be easily understood from context
-        4. Are frequently used in beginner language courses
+        DO NOT include ONLY words that:
+        1. Are among the 100-200 most basic words in {language} (like pronouns, basic verbs, numbers 1-10)
+        2. Are extremely common everyday words that everyone knows
 
-        Be strict and conservative in your selection - it's better to miss an uncommon word than to include a common one.
+        Be generous in your selection - it's better to include a word that might be familiar than to miss one that could be challenging.
         """
 
         model = genai.GenerativeModel(
@@ -230,12 +232,15 @@ def identify_uncommon_words(text: str, language: str) -> List[str]:
             common_word_list = common_words["english"]
 
         # Identify uncommon words based on our simple list
-        # Be more selective - only include words longer than 6 characters that aren't in our common list
-        # This helps ensure we're only getting truly uncommon words
-        uncommon_words = [word for word in unique_words if word.lower() not in common_word_list and len(word) > 6]
+        # Be less selective - include words longer than 4 characters that aren't in our common list
+        # Also include any words longer than 7 characters regardless of whether they're in the common list
+        # This helps ensure we're getting more words for translation
+        uncommon_words = [word for word in unique_words if
+                         (word.lower() not in common_word_list and len(word) > 4) or
+                         len(word) > 7]
 
-        # Limit to at most 2 words per sentence to avoid overwhelming translations
-        return uncommon_words[:2]
+        # Limit to at most 5 words per sentence to provide more translations
+        return uncommon_words[:5]
 
     except Exception as e:
         logger.error(f"Error identifying uncommon words: {e}")
@@ -252,12 +257,15 @@ def identify_uncommon_words(text: str, language: str) -> List[str]:
             common_word_list = common_words["english"]
 
         # Identify uncommon words based on our simple list
-        # Be more selective - only include words longer than 6 characters that aren't in our common list
-        # This helps ensure we're only getting truly uncommon words
-        uncommon_words = [word for word in unique_words if word.lower() not in common_word_list and len(word) > 6]
+        # Be less selective - include words longer than 4 characters that aren't in our common list
+        # Also include any words longer than 7 characters regardless of whether they're in the common list
+        # This helps ensure we're getting more words for translation
+        uncommon_words = [word for word in unique_words if
+                         (word.lower() not in common_word_list and len(word) > 4) or
+                         len(word) > 7]
 
-        # Limit to at most 2 words per sentence to avoid overwhelming translations
-        return uncommon_words[:2]
+        # Limit to at most 5 words per sentence to provide more translations
+        return uncommon_words[:5]
 
 def translate_words(words: List[str], source_language: str) -> Dict[str, str]:
     """
